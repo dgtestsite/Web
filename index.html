@@ -5,32 +5,42 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NHL Trade Simulator</title>
 <style>
-  body { font-family: Arial, sans-serif; }
-  table { border-collapse: collapse; margin: 20px; width: 45%; float: left; }
-  th, td { border: 1px solid #ccc; padding: 5px; text-align: left; }
+  body { font-family: Arial, sans-serif; margin: 20px; }
+  h1 { text-align: center; }
+  .teams { display: flex; justify-content: space-around; margin-bottom: 20px; }
+  table { border-collapse: collapse; width: 45%; }
+  th, td { border: 1px solid #ccc; padding: 5px; text-align: left; cursor: pointer; }
   th { background: #eee; }
+  tr.selected { background-color: #b3d9ff; }
+  #tradeMessage { font-weight: bold; color: red; text-align: center; margin-top: 10px; }
   .container { display: flex; justify-content: space-between; }
-  button { margin: 10px 0; }
 </style>
 </head>
 <body>
 
-<h1>NHL Trade Simulator</h1>
-<div>
-  <label for="team1">Team 1:</label>
-  <select id="team1"></select>
-  <label for="team2">Team 2:</label>
-  <select id="team2"></select>
+<h1>NHL Trade Simulator 2025–26</h1>
+
+<div class="teams">
+  <div>
+    <label for="team1">Team 1:</label>
+    <select id="team1"></select>
+    <p>Salary Cap: $<span id="cap1">0</span></p>
+  </div>
+  <div>
+    <label for="team2">Team 2:</label>
+    <select id="team2"></select>
+    <p>Salary Cap: $<span id="cap2">0</span></p>
+  </div>
 </div>
 
 <div class="container">
   <table id="roster1">
-    <thead><tr><th>Name</th><th>Position</th><th>Salary</th></tr></thead>
+    <thead><tr><th>Name</th><th>Pos</th><th>Salary</th></tr></thead>
     <tbody></tbody>
   </table>
 
   <table id="roster2">
-    <thead><tr><th>Name</th><th>Position</th><th>Salary</th></tr></thead>
+    <thead><tr><th>Name</th><th>Pos</th><th>Salary</th></tr></thead>
     <tbody></tbody>
   </table>
 </div>
@@ -39,19 +49,28 @@
 <p id="tradeMessage"></p>
 
 <script>
-// Sample NHL data (replace with full dataset)
+// Example NHL teams & salaries (expand with full 32 teams and rosters)
+const salaryCapLimit = 95500000; // 2025–26 NHL salary cap
 const teams = {
   "Toronto Maple Leafs": [
-    {name: "Auston Matthews", pos: "C", salary: 11800000},
-    {name: "Mitch Marner", pos: "RW", salary: 10700000},
+    {name: "Auston Matthews", pos: "C", salary: 15200000},
+    {name: "Mitch Marner", pos: "RW", salary: 15000000},
+    {name: "John Tavares", pos: "C", salary: 11750000}
   ],
   "Montreal Canadiens": [
     {name: "Nick Suzuki", pos: "C", salary: 7750000},
     {name: "Cole Caufield", pos: "RW", salary: 5000000},
+    {name: "Shea Weber", pos: "D", salary: 8000000}
+  ],
+  "Edmonton Oilers": [
+    {name: "Leon Draisaitl", pos: "C", salary: 16500000},
+    {name: "Connor McDavid", pos: "C", salary: 16000000}
+  ],
+  "Colorado Avalanche": [
+    {name: "Nathan MacKinnon", pos: "C", salary: 16050000},
+    {name: "Cale Makar", pos: "D", salary: 9500000}
   ]
 };
-
-const salaryCap = 82500000;
 
 function populateTeams() {
   const team1 = document.getElementById('team1');
@@ -80,6 +99,12 @@ function updateRosters() {
 
   fillRoster('roster1', teams[t1]);
   fillRoster('roster2', teams[t2]);
+
+  // Update current salary caps
+  const cap1 = teams[t1].reduce((sum, p) => sum + p.salary, 0);
+  const cap2 = teams[t2].reduce((sum, p) => sum + p.salary, 0);
+  document.getElementById('cap1').innerText = cap1.toLocaleString();
+  document.getElementById('cap2').innerText = cap2.toLocaleString();
 }
 
 function proposeTrade() {
@@ -89,13 +114,18 @@ function proposeTrade() {
   const selected1 = Array.from(document.getElementById('roster1').querySelectorAll('.selected'));
   const selected2 = Array.from(document.getElementById('roster2').querySelectorAll('.selected'));
 
+  if(selected1.length === 0 && selected2.length === 0) {
+    document.getElementById('tradeMessage').innerText = "Select players to trade!";
+    return;
+  }
+
   const tradeSalary1 = selected1.reduce((sum, row) => sum + parseInt(row.cells[2].innerText.replace(/,/g, '')), 0);
   const tradeSalary2 = selected2.reduce((sum, row) => sum + parseInt(row.cells[2].innerText.replace(/,/g, '')), 0);
 
   const team1Current = teams[t1].reduce((sum, p) => sum + p.salary, 0);
   const team2Current = teams[t2].reduce((sum, p) => sum + p.salary, 0);
 
-  if(team1Current - tradeSalary1 + tradeSalary2 > salaryCap || team2Current - tradeSalary2 + tradeSalary1 > salaryCap) {
+  if(team1Current - tradeSalary1 + tradeSalary2 > salaryCapLimit || team2Current - tradeSalary2 + tradeSalary1 > salaryCapLimit) {
     document.getElementById('tradeMessage').innerText = "Trade violates salary cap!";
     return;
   }
