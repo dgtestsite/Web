@@ -22,7 +22,7 @@
     #sidebar { flex:1; padding:20px; border-left:2px solid #ccc; }
 
     /* Sidebar headlines */
-    .breaking-news { font-size:28px; font-weight:bold; margin-bottom:15px; text-transform:uppercase; }
+    .breaking-news { font-size:28px; font-weight:bold; margin-bottom:15px; text-transform:uppercase; transition: background-color 0.5s ease; }
     .small-headline { font-size:18px; font-weight:bold; margin-bottom:10px; text-transform:uppercase; color:#000; }
     .small-headline a { color:#000; text-decoration:none; }
     .small-headline a:hover { text-decoration:underline; }
@@ -83,7 +83,7 @@ const feeds = [
     "https://www.politico.com/rss/politics08.xml",
     "https://www.npr.org/rss/rss.php?id=1014"
 ];
-const apiKey = "xcn09x78nwk54vrwgurlnhjaf53zglo0yiuhpefb"; // Replace with your rss2json.com API key
+const apiKey = "xcn09x78nwk54vrwgurlnhjaf53zglo0yiuhpefb"; // Your RSS2JSON API key
 const headlineColors = ["red","black","blue"];
 let rotatingHeadlines = [];
 let currentHeadlineIndex = 0;
@@ -109,10 +109,15 @@ async function updateHeadlines(){
     }
     if(allItems.length===0) return;
 
+    const previousTop = rotatingHeadlines[currentHeadlineIndex] || "";
     rotatingHeadlines = allItems.map(item => item.title.toUpperCase());
 
-    // Top headline
+    // Top headline flash effect if changed
     const top = document.getElementById("top-headline");
+    if(rotatingHeadlines[0] !== previousTop){
+        top.style.backgroundColor = "yellow"; // flash highlight
+        setTimeout(()=>{ top.style.backgroundColor = "transparent"; }, 1000);
+    }
     top.textContent = rotatingHeadlines[0];
     top.style.color = headlineColors[0];
 
