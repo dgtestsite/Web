@@ -16,6 +16,7 @@ header nav a {
     color: #fff;
     margin: 0 1rem;
     text-decoration: none;
+    font-weight: bold;
 }
 
 main {
@@ -23,13 +24,50 @@ main {
 }
 
 section {
-    margin-bottom: 2rem;
+    margin-bottom: 3rem;
 }
 
 .youtube-container iframe,
 .live-chat iframe {
     width: 100%;
     max-width: 800px;
+    margin-bottom: 1rem;
+}
+
+.wrestler-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1rem;
+}
+
+.wrestler-card {
+    background: #222;
+    padding: 1rem;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.wrestler-card img {
+    width: 100%;
+    border-radius: 10px;
+    margin-bottom: 0.5rem;
+}
+
+.social-feeds a, .social-feeds iframe {
+    display: block;
+    margin: 0.5rem auto;
+}
+
+.scrollable-social {
+    display: flex;
+    overflow-x: auto;
+    gap: 1rem;
+    padding: 1rem 0;
+}
+
+.scrollable-social iframe,
+.scrollable-social a {
+    flex: 0 0 auto;
 }
 
 .ad-placeholder {
@@ -37,4 +75,11 @@ section {
     color: #fff;
     text-align: center;
     padding: 2rem;
+    border-radius: 10px;
+}
+
+footer {
+    background: #b71c1c;
+    text-align: center;
+    padding: 1rem;
 }
