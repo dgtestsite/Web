@@ -34,7 +34,7 @@
         #ticker span {
             display: inline-block;
             padding-left: 100%;
-            animation: ticker 15s linear infinite;
+            animation: ticker 60s linear infinite; /* slow ticker */
         }
 
         #ticker:hover span {
@@ -61,10 +61,11 @@
 
         #news-column a {
             display: block;
-            font-size: 18px;
+            font-size: 16px;
             color: #000;
             text-decoration: none;
-            margin: 10px 0;
+            margin: 8px 0;
+            text-transform: uppercase; /* optional Drudge-style */
         }
 
         #news-column a:hover {
@@ -78,16 +79,21 @@
             border-left: 2px solid #ccc;
         }
 
+        /* Top headline */
         .breaking-news {
-            font-size: 22px;
+            font-size: 28px;
             font-weight: bold;
             color: #000;
             margin-bottom: 15px;
+            text-transform: uppercase;
         }
 
+        /* Middle headlines */
         .small-headline {
-            font-size: 16px;
+            font-size: 18px;
+            font-weight: bold;
             margin-bottom: 10px;
+            text-transform: uppercase;
         }
 
         .small-headline a {
@@ -156,6 +162,18 @@
             .video-container {
                 padding-bottom: 56.25%;
             }
+
+            .breaking-news {
+                font-size: 24px;
+            }
+
+            .small-headline {
+                font-size: 16px;
+            }
+
+            #news-column a {
+                font-size: 14px;
+            }
         }
     </style>
 </head>
@@ -165,25 +183,25 @@
     <!-- Scrolling Ticker -->
     <div id="ticker">
         <span>
-            BREAKING: Major Political Event Today | Senate Passes Controversial Bill | President Addresses the Nation | Election Polls Show Surprising Results | Supreme Court Ruling Sparks Debate | Governor Announces New Policy
+            BREAKING: MAJOR POLITICAL EVENT TODAY | SENATE PASSES CONTROVERSIAL BILL | PRESIDENT ADDRESSES THE NATION | ELECTION POLLS SHOW SURPRISING RESULTS | SUPREME COURT RULING SPARKS DEBATE | GOVERNOR ANNOUNCES NEW POLICY
         </span>
     </div>
 
     <div id="container">
         <!-- Left news column -->
         <div id="news-column">
-            <a href="#">BREAKING: Major Political Event Today</a>
-            <a href="#">Senate Passes Controversial Bill</a>
-            <a href="#">President Addresses the Nation</a>
-            <a href="#">Election Polls Show Surprising Results</a>
-            <a href="#">Supreme Court Ruling Sparks Debate</a>
-            <a href="#">Governor Announces New Policy</a>
-            <a href="#">Political Analyst Weighs In</a>
-            <a href="#">Campaign Finance Report Released</a>
-            <a href="#">Congressional Hearing Highlights</a>
-            <a href="#">Protests Erupt Across the Country</a>
-            <a href="#">Major Media Outlet Investigates Story</a>
-            <a href="#">Exclusive Interview with Politician</a>
+            <a href="#">BREAKING: MAJOR POLITICAL EVENT TODAY</a>
+            <a href="#">SENATE PASSES CONTROVERSIAL BILL</a>
+            <a href="#">PRESIDENT ADDRESSES THE NATION</a>
+            <a href="#">ELECTION POLLS SHOW SURPRISING RESULTS</a>
+            <a href="#">SUPREME COURT RULING SPARKS DEBATE</a>
+            <a href="#">GOVERNOR ANNOUNCES NEW POLICY</a>
+            <a href="#">POLITICAL ANALYST WEIGHS IN</a>
+            <a href="#">CAMPAIGN FINANCE REPORT RELEASED</a>
+            <a href="#">CONGRESSIONAL HEARING HIGHLIGHTS</a>
+            <a href="#">PROTESTS ERUPT ACROSS THE COUNTRY</a>
+            <a href="#">MAJOR MEDIA OUTLET INVESTIGATES STORY</a>
+            <a href="#">EXCLUSIVE INTERVIEW WITH POLITICIAN</a>
         </div>
 
         <!-- Sidebar -->
@@ -198,16 +216,16 @@
                 </iframe>
             </div>
 
-            <!-- Big Breaking News Headline -->
+            <!-- Top headline -->
             <div class="breaking-news">
-                BREAKING: Major Political Event Today!
+                BREAKING: MAJOR POLITICAL EVENT TODAY!
             </div>
 
-            <!-- Smaller headlines -->
-            <div class="small-headline"><a href="#">Senate Passes Controversial Bill</a></div>
-            <div class="small-headline"><a href="#">President Addresses the Nation</a></div>
-            <div class="small-headline"><a href="#">Election Polls Show Surprising Results</a></div>
-            <div class="small-headline"><a href="#">Supreme Court Ruling Sparks Debate</a></div>
+            <!-- Middle headlines -->
+            <div class="small-headline"><a href="#">SENATE PASSES CONTROVERSIAL BILL</a></div>
+            <div class="small-headline"><a href="#">PRESIDENT ADDRESSES THE NATION</a></div>
+            <div class="small-headline"><a href="#">ELECTION POLLS SHOW SURPRISING RESULTS</a></div>
+            <div class="small-headline"><a href="#">SUPREME COURT RULING SPARKS DEBATE</a></div>
 
             <!-- Google Ad Placeholder -->
             <div class="ad-placeholder">
