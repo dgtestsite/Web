@@ -5,9 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>US Political News - Drudge Clone</title>
 <style>
-    body { font-family: Arial, sans-serif; background-color:#fff; color:#000; margin:0; padding:0; }
+    body { font-family: Arial, sans-serif; background:#fff; color:#000; margin:0; padding:0; }
     header { text-align:center; padding:20px; font-size:36px; font-weight:bold; }
-    /* Scrolling ticker */
     #ticker { width:100%; background:#f0f0f0; overflow:hidden; white-space:nowrap; border-top:2px solid #ccc; border-bottom:2px solid #ccc; }
     #ticker span { display:inline-block; padding-left:100%; animation:ticker 60s linear infinite; }
     #ticker:hover span { animation-play-state:paused; }
@@ -17,7 +16,7 @@
     #news-column a { display:block; font-size:16px; color:#000; text-decoration:none; margin:8px 0; text-transform:uppercase; }
     #news-column a:hover { text-decoration:underline; }
     #sidebar { flex:1; padding:20px; border-left:2px solid #ccc; }
-    .breaking-news { font-size:28px; font-weight:bold; color:red; margin-bottom:15px; text-transform:uppercase; }
+    .breaking-news { font-size:28px; font-weight:bold; margin-bottom:15px; text-transform:uppercase; }
     .small-headline { font-size:18px; font-weight:bold; margin-bottom:10px; text-transform:uppercase; color:#000; }
     .small-headline a { color:#000; text-decoration:none; }
     .small-headline a:hover { text-decoration:underline; }
@@ -44,18 +43,16 @@
 
 <div id="container">
     <!-- Left news column -->
-    <div id="news-column" id="left-news">
-        <!-- Will populate dynamically -->
-    </div>
+    <div id="news-column"></div>
 
     <!-- Sidebar -->
     <div id="sidebar">
-        <!-- YouTube video at top (autoplay, muted) -->
+        <!-- YouTube video at top -->
         <div class="video-container">
             <iframe src="https://www.youtube.com/embed/4nMfRpesYfw?autoplay=1&mute=1&rel=0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
 
-        <!-- Top headline -->
+        <!-- Rotating Top Headline -->
         <div class="breaking-news" id="top-headline">Loading...</div>
 
         <!-- Middle headlines -->
@@ -68,22 +65,25 @@
 
 <footer>&copy; 2025 US Political News - Drudge Clone</footer>
 
-<!-- JavaScript for automated content -->
 <script>
-// RSS feeds to pull headlines from
+// RSS feeds to pull headlines
 const feeds = [
     "https://www.politico.com/rss/politics08.xml",
     "https://www.npr.org/rss/rss.php?id=1014"
 ];
 
-// Utility function to fetch RSS as JSON using rss2json.com
+// Colors for rotating headlines
+const headlineColors = ["red", "black", "blue"];
+
+let rotatingHeadlines = [];
+let currentHeadlineIndex = 0;
+
 async function fetchFeed(url) {
     const response = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(url)}`);
     const data = await response.json();
     return data.items;
 }
 
-// Populate headlines
 async function updateHeadlines() {
     let allItems = [];
     for(const feed of feeds){
@@ -97,11 +97,9 @@ async function updateHeadlines() {
 
     if(allItems.length === 0) return;
 
-    // Top headline
-    const top = allItems[0];
-    document.getElementById("top-headline").textContent = top.title.toUpperCase();
+    rotatingHeadlines = allItems.map(item => item.title.toUpperCase());
 
-    // Middle headlines
+    // Middle headlines (sidebar)
     const middleContainer = document.getElementById("middle-headlines");
     middleContainer.innerHTML = "";
     allItems.slice(1,5).forEach(item => {
@@ -127,8 +125,20 @@ async function updateHeadlines() {
     tickerContent.textContent = allItems.slice(0,10).map(item => item.title.toUpperCase()).join(" | ");
 }
 
+// Rotate top headline every 5 seconds
+function rotateHeadline() {
+    if(rotatingHeadlines.length === 0) return;
+    const topHeadline = document.getElementById("top-headline");
+    topHeadline.textContent = rotatingHeadlines[currentHeadlineIndex];
+    topHeadline.style.color = headlineColors[currentHeadlineIndex % headlineColors.length];
+    currentHeadlineIndex = (currentHeadlineIndex + 1) % rotatingHeadlines.length;
+}
+
 // Initial fetch
-updateHeadlines();
+updateHeadlines().then(() => {
+    rotateHeadline();
+    setInterval(rotateHeadline, 5000); // rotate every 5 seconds
+});
 
 // Refresh headlines every 10 minutes
 setInterval(updateHeadlines, 10*60*1000);
