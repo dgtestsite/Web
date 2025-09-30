@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>NHL Player Ratings by Team</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header>
+    <h1>NHL Player Ratings</h1>
+    <p class="subtitle">Lists current NHL rosters by team and computes a 0–100 rating for each player.</p>
+  </header>
+
+  <main>
+    <section class="controls">
+      <label for="teamSelect">Choose team:</label>
+      <select id="teamSelect"><option value="all">Loading teams…</option></select>
+
+      <label for="rankingSource">Optional fantasy ranking JSON URL:</label>
+      <input id="rankingSource" placeholder="https://example.com/rankings.json" />
+
+      <button id="applyBtn">Load Roster & Compute Ratings</button>
+      <span id="status" class="status">Ready</span>
+    </section>
+
+    <section id="teamsContainer" class="teams"></section>
+  </main>
+
+  <footer>
+    <p>Static demo site. Ratings are computed client-side using NHL stats and optional external fantasy ranking JSON (if provided).</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
