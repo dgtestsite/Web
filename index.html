@@ -1,180 +1,106 @@
-<!--
-nhl-fantasy-ratings.html
-Updated: Fantasy-style ratings algorithm.
--->
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NHL Fantasy Player Ratings</title>
   <style>
-    :root{--accent:#0b5fff;--muted:#6b7280;--card:#ffffff;--bg:#f8fafc}
-    html,body{height:100%;margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial}
-    body{background:var(--bg);color:#0f172a;padding:24px}
-    .container{max-width:1100px;margin:0 auto}
-    header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
-    h1{font-size:20px;margin:0}
-    .controls{display:flex;gap:8px;align-items:center}
-    select,input[type=text],button{padding:8px 10px;border-radius:8px;border:1px solid #e6e9ee;background:white}
-    button{cursor:pointer}
-    .card{background:var(--card);border-radius:12px;padding:14px;box-shadow:0 6px 18px rgba(13,20,40,0.06)}
-    table{width:100%;border-collapse:collapse;margin-top:12px}
-    th,td{padding:8px 10px;text-align:left;border-bottom:1px solid #eef2f7}
-    th{background:#fafcff;cursor:pointer;user-select:none}
-    .rating{font-weight:700}
-    .muted{color:var(--muted)}
-    .small{font-size:13px}
-    .toolbar{display:flex;gap:8px;flex-wrap:wrap}
-    .uploader{display:inline-block}
-    footer{margin-top:18px;color:var(--muted);font-size:13px}
-    @media (max-width:700px){.controls{flex-direction:column;align-items:stretch}}
+    body { font-family: Arial, sans-serif; margin: 20px; background-color: #f4f4f4; }
+    h1 { text-align: center; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { padding: 8px 12px; text-align: left; border: 1px solid #ddd; }
+    th { background-color: #4CAF50; color: white; }
+    tr:nth-child(even) { background-color: #f2f2f2; }
+    .rating { font-weight: bold; color: #4CAF50; }
   </style>
 </head>
 <body>
-  <div class="container">
-    <header>
-      <div>
-        <h1>NHL Fantasy Player Ratings</h1>
-        <div class="small muted">Fantasy-style ratings — ratings out of 100. Edit data or upload JSON.</div>
-      </div>
 
-      <div class="controls">
-        <div class="toolbar card" style="display:flex;gap:8px;align-items:center">
-          <label for="teamSelect" class="small muted">Team</label>
-          <select id="teamSelect"><option value="all">All Teams</option></select>
+  <h1>NHL Fantasy Player Ratings (2025–26 Season)</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>Rank</th>
+        <th>Player</th>
+        <th>Team</th>
+        <th>Position</th>
+        <th>Fantasy Rating</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Top 10 Players -->
+      <tr>
+        <td>1</td>
+        <td>Connor McDavid</td>
+        <td>EDM</td>
+        <td>C</td>
+        <td class="rating">100</td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td>Leon Draisaitl</td>
+        <td>EDM</td>
+        <td>C</td>
+        <td class="rating">98</td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td>Nathan MacKinnon</td>
+        <td>COL</td>
+        <td>C</td>
+        <td class="rating">96</td>
+      </tr>
+      <tr>
+        <td>4</td>
+        <td>Nikita Kucherov</td>
+        <td>TBL</td>
+        <td>RW</td>
+        <td class="rating">94</td>
+      </tr>
+      <tr>
+        <td>5</td>
+        <td>Cale Makar</td>
+        <td>COL</td>
+        <td>D</td>
+        <td class="rating">92</td>
+      </tr>
+      <tr>
+        <td>6</td>
+        <td>Kirill Kaprizov</td>
+        <td>MIN</td>
+        <td>LW</td>
+        <td class="rating">90</td>
+      </tr>
+      <tr>
+        <td>7</td>
+        <td>Brady Tkachuk</td>
+        <td>OTT</td>
+        <td>LW</td>
+        <td class="rating">88</td>
+      </tr>
+      <tr>
+        <td>8</td>
+        <td>David Pastrnak</td>
+        <td>BOS</td>
+        <td>RW</td>
+        <td class="rating">86</td>
+      </tr>
+      <tr>
+        <td>9</td>
+        <td>Mikko Rantanen</td>
+        <td>COL</td>
+        <td>RW</td>
+        <td class="rating">84</td>
+      </tr>
+      <tr>
+        <td>10</td>
+        <td>Connor Hellebuyck</td>
+        <td>WPG</td>
+        <td>G</td>
+        <td class="rating">82</td>
+      </tr>
+    </tbody>
+  </table>
 
-          <label for="search" class="small muted">Search</label>
-          <input id="search" type="text" placeholder="Search player or position" />
-
-          <button id="regen">Regenerate Ratings</button>
-          <label class="uploader small">
-            <input id="jsonUpload" type="file" accept="application/json" style="display:none" />
-            <button id="uploadBtn">Upload JSON</button>
-          </label>
-        </div>
-      </div>
-    </header>
-
-    <main>
-      <div class="card">
-        <div class="small muted">Showing <span id="count">0</span> players — click a column header to sort.</div>
-        <table id="playersTable" aria-describedby="count">
-          <thead>
-            <tr>
-              <th data-key="team">Team</th>
-              <th data-key="name">Player</th>
-              <th data-key="position">Pos</th>
-              <th data-key="goals">G</th>
-              <th data-key="assists">A</th>
-              <th data-key="hits">HIT</th>
-              <th data-key="rating">Rating</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </div>
-
-      <footer>
-        <div class="muted">Tip: Upload JSON or edit the sample data. Ratings now use fantasy-style scoring.</div>
-      </footer>
-    </main>
-  </div>
-
-  <script>
-    const sampleTeams = [
-      {name:'Toronto Maple Leafs', abbr:'TOR', players:[
-        {name:'Auston Matthews', position:'C', goals:50, assists:30, hits:30, plusMinus:15, ppp:20, sog:350, blk:40, pim:12},
-        {name:'William Nylander', position:'RW', goals:25, assists:45, hits:22, plusMinus:8, ppp:18, sog:300, blk:25, pim:10}
-      ]},
-      {name:'Boston Bruins', abbr:'BOS', players:[
-        {name:'David Pastrnak', position:'RW', goals:40, assists:30, hits:20, plusMinus:12, ppp:25, sog:320, blk:20, pim:14},
-        {name:'Brad Marchand', position:'LW', goals:20, assists:50, hits:90, plusMinus:10, ppp:20, sog:310, blk:35, pim:60}
-      ]}
-    ];
-
-    const teamSelect = document.getElementById('teamSelect');
-    const searchInput = document.getElementById('search');
-    const playersTableBody = document.querySelector('#playersTable tbody');
-    const regenBtn = document.getElementById('regen');
-    const countEl = document.getElementById('count');
-    const jsonUpload = document.getElementById('jsonUpload');
-    const uploadBtn = document.getElementById('uploadBtn');
-
-    let teams = JSON.parse(JSON.stringify(sampleTeams));
-    let flatPlayers = [];
-    let sortKey = null; let sortDir = 1;
-
-    // Fantasy-style rating for skaters
-    function computeSkaterRating(p) {
-      const g = Math.min(p.goals||0,60)/60;
-      const a = Math.min(p.assists||0,80)/80;
-      const pm = ((p.plusMinus||0)+20)/40;
-      const ppp = Math.min(p.ppp||0,40)/40;
-      const sog = Math.min(p.sog||0,350)/350;
-      const hit = Math.min(p.hits||0,300)/300;
-      const blk = Math.min(p.blk||0,200)/200;
-      const pim = Math.min(p.pim||0,100)/100;
-      const score = (g*0.25 + a*0.25 + pm*0.05 + ppp*0.10 + sog*0.10 + hit*0.10 + blk*0.10 + pim*0.05)*100;
-      return Math.round(score);
-    }
-
-    function computeGoalieRating(p){
-      const w = Math.min(p.wins||0,45)/45;
-      const gaa = 1-Math.min(Math.max(p.gaa||3,1.5),4)/4;
-      const sv = Math.min(p.svPct||0.94,0.94)/0.94;
-      const so = Math.min(p.so||0,8)/8;
-      const score = (w*0.35 + gaa*0.20 + sv*0.35 + so*0.10)*100;
-      return Math.round(score);
-    }
-
-    function computeRating(p){
-      return p.position==='G' ? computeGoalieRating(p) : computeSkaterRating(p);
-    }
-
-    function rebuildFlat(){
-      flatPlayers = [];
-      teams.forEach(team=>{
-        (team.players||[]).forEach(p=>{
-          const player = Object.assign({},p);
-          player.team = team.name; player.teamAbbr=team.abbr||'';
-          player.rating = computeRating(player);
-          flatPlayers.push(player);
-        });
-      });
-    }
-
-    function populateTeams(){
-      while(teamSelect.options.length>1) teamSelect.remove(1);
-      teams.forEach((t,i)=>{const opt=document.createElement('option');opt.value=i;opt.textContent=t.name;teamSelect.appendChild(opt);});
-    }
-
-    function render(){
-      const q = searchInput.value.trim().toLowerCase();
-      const teamFilter = teamSelect.value;
-      let shown = flatPlayers.filter(p=>{
-        if(teamFilter!=='all'){const t=teams[teamFilter];if(!t)return false;if(p.team!==t.name)return false;}
-        if(!q)return true;
-        return (p.name||'').toLowerCase().includes(q)||(p.position||'').toLowerCase().includes(q)||(p.team||'').toLowerCase().includes(q);
-      });
-      if(sortKey){shown.sort((a,b)=>{const av=a[sortKey]??'';const bv=b[sortKey]??'';return typeof av==='number'&&typeof bv==='number'?(av-bv)*sortDir*-1:String(av).localeCompare(String(bv))*sortDir;});}
-      playersTableBody.innerHTML='';
-      shown.forEach(p=>{const tr=document.createElement('tr');tr.innerHTML=`<td>${escapeHtml(p.team)}</td><td>${escapeHtml(p.name)}</td><td>${escapeHtml(p.position||'')}</td><td>${numberOrDash(p.goals)}</td><td>${numberOrDash(p.assists)}</td><td>${numberOrDash(p.hits)}</td><td class="rating">${p.rating}</td>`;playersTableBody.appendChild(tr);});
-      countEl.textContent = shown.length;
-    }
-
-    function numberOrDash(v){return(v===undefined||v===null||v==='')?'—':String(v);}
-    function escapeHtml(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]);}
-
-    document.querySelectorAll('th[data-key]').forEach(th=>{th.addEventListener('click',()=>{const key=th.dataset.key;if(sortKey===key)sortDir*=-1;else{sortKey=key;sortDir=1;}render();});});
-    regenBtn.addEventListener('click',()=>{rebuildFlat();render();});
-    searchInput.addEventListener('input',()=>render());
-    teamSelect.addEventListener('change',()=>render());
-    uploadBtn.addEventListener('click',()=>jsonUpload.click());
-    jsonUpload.addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;const reader=new FileReader();reader.onload=ev=>{try{const data=JSON.parse(ev.target.result);if(Array.isArray(data.teams)){teams=data.teams;init();alert('JSON loaded: '+teams.length+' teams');}else if(Array.isArray(data)){teams=data;init();alert('JSON loaded (array)');}else{alert('JSON not in expected format.');}}catch(err){alert('Invalid JSON: '+err.message);}};reader.readAsText(f);});
-
-    function init(){populateTeams();rebuildFlat();render();}
-    init();
-  </script>
 </body>
 </html>
