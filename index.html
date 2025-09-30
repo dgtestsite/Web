@@ -3,37 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WWE Pro Wrestling Fan Site</title>
+    <title>WWE Fan Portal</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <header>
-        <h1>WWE Pro Wrestling Fan Site</h1>
+        <h1>WWE Fan Portal</h1>
         <nav>
             <a href="#live">Live</a>
             <a href="#news">News</a>
+            <a href="#wrestlers">Wrestlers</a>
             <a href="#social">Social</a>
+            <a href="#ads">Ads</a>
         </nav>
     </header>
 
     <main>
-        <!-- Live YouTube Stream -->
+        <!-- LIVE STREAM & CHAT -->
         <section id="live">
             <h2>Live WWE Stream</h2>
             <div class="youtube-container">
-                <iframe width="560" height="315" 
-                    src="https://www.youtube.com/embed/live_stream?channel=UCJ5v_MCY6GNUBTO8-D3XoAg" 
-                    frameborder="0" allowfullscreen>
-                </iframe>
+                <iframe width="800" height="450" 
+                        src="https://www.youtube.com/embed/live_stream?channel=UCJ5v_MCY6GNUBTO8-D3XoAg" 
+                        frameborder="0" allowfullscreen></iframe>
             </div>
             <div class="live-chat">
                 <h3>Live Chat</h3>
                 <iframe src="https://www.youtube.com/live_chat?v=YOUR_VIDEO_ID&embed_domain=YOUR_DOMAIN" 
-                    width="100%" height="400" frameborder="0"></iframe>
+                        width="100%" height="400" frameborder="0"></iframe>
             </div>
         </section>
 
-        <!-- RSS News Feed -->
+        <!-- NEWS FEED -->
         <section id="news">
             <h2>WWE News</h2>
             <div id="rss-feeds">
@@ -41,24 +42,47 @@
             </div>
         </section>
 
-        <!-- Social Media -->
-        <section id="social">
-            <h2>WWE Social Media</h2>
-
-            <!-- Twitter -->
-            <div class="twitter">
-                <a class="twitter-timeline" 
-                   href="https://twitter.com/WWE?ref_src=twsrc%5Etfw">Tweets by WWE</a>
-            </div>
-
-            <!-- Instagram -->
-            <div class="instagram">
-                <iframe src="https://www.instagram.com/p/CODE/embed" 
-                        width="320" height="440" frameborder="0" scrolling="no" allowtransparency="true"></iframe>
+        <!-- WRESTLER GRID -->
+        <section id="wrestlers">
+            <h2>WWE Superstars</h2>
+            <div class="wrestler-grid">
+                <!-- Example Wrestler Card -->
+                <div class="wrestler-card">
+                    <img src="assets/wrestler-images/roman.jpg" alt="Roman Reigns">
+                    <h3>Roman Reigns</h3>
+                    <div class="social-feeds">
+                        <a class="twitter-timeline" href="https://twitter.com/WWE?ref_src=twsrc%5Etfw">Twitter</a>
+                        <iframe src="https://www.instagram.com/p/CODE/embed" width="320" height="440" frameborder="0" scrolling="no" allowtransparency="true"></iframe>
+                    </div>
+                </div>
+                <div class="wrestler-card">
+                    <img src="assets/wrestler-images/sasha.jpg" alt="Sasha Banks">
+                    <h3>Sasha Banks</h3>
+                    <div class="social-feeds">
+                        <a class="twitter-timeline" href="https://twitter.com/WWE?ref_src=twsrc%5Etfw">Twitter</a>
+                        <iframe src="https://www.instagram.com/p/CODE/embed" width="320" height="440" frameborder="0" scrolling="no" allowtransparency="true"></iframe>
+                    </div>
+                </div>
+                <!-- Add more wrestler cards similarly -->
             </div>
         </section>
 
-        <!-- Google Ads Placeholder -->
+        <!-- SOCIAL MEDIA SCROLL -->
+        <section id="social">
+            <h2>Live WWE Social Feed</h2>
+            <div class="scrollable-social">
+                <!-- Twitter Widgets -->
+                <a class="twitter-timeline" href="https://twitter.com/WWE?ref_src=twsrc%5Etfw">WWE Twitter</a>
+                <a class="twitter-timeline" href="https://twitter.com/WWERaw?ref_src=twsrc%5Etfw">WWE Raw</a>
+                <a class="twitter-timeline" href="https://twitter.com/WWEPPV?ref_src=twsrc%5Etfw">WWE PPV</a>
+                
+                <!-- Instagram Embeds (replace CODE with actual post codes) -->
+                <iframe src="https://www.instagram.com/p/CODE/embed" width="320" height="440" frameborder="0" scrolling="no" allowtransparency="true"></iframe>
+                <iframe src="https://www.instagram.com/p/CODE/embed" width="320" height="440" frameborder="0" scrolling="no" allowtransparency="true"></iframe>
+            </div>
+        </section>
+
+        <!-- ADS -->
         <section id="ads">
             <h2>Sponsored</h2>
             <div class="ad-placeholder">
@@ -68,7 +92,7 @@
     </main>
 
     <footer>
-        <p>&copy; 2025 WWE Fan Site</p>
+        <p>&copy; 2025 WWE Fan Portal</p>
     </footer>
 
     <!-- Scripts -->
