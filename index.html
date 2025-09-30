@@ -1,192 +1,78 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>US Political News - Drudge Clone</title>
-<style>
-    body { font-family: Arial, sans-serif; background:#fff; color:#000; margin:0; padding:0; }
-    header { text-align:center; padding:20px; font-size:36px; font-weight:bold; }
-
-    /* Scrolling ticker container */
-    #ticker-container { width:100%; overflow:hidden; border-top:2px solid #ccc; border-bottom:2px solid #ccc; background:#f0f0f0; height:30px; position:relative; }
-
-    /* Ticker line */
-    .ticker-line { position:absolute; white-space:nowrap; top:0; left:100%; font-weight:bold; text-transform:uppercase; font-size:16px; }
-    .ticker-line span { margin-right:50px; }
-
-    #container { display:flex; max-width:1200px; margin:0 auto; }
-    #news-column { flex:3; padding:20px; }
-    #news-column a { display:block; font-size:16px; color:#000; text-decoration:none; margin:8px 0; text-transform:uppercase; }
-    #news-column a:hover { text-decoration:underline; }
-    #sidebar { flex:1; padding:20px; border-left:2px solid #ccc; }
-
-    /* Sidebar headlines */
-    .breaking-news { font-size:28px; font-weight:bold; margin-bottom:15px; text-transform:uppercase; transition: background-color 0.5s ease; }
-    .small-headline { font-size:18px; font-weight:bold; margin-bottom:10px; text-transform:uppercase; color:#000; }
-    .small-headline a { color:#000; text-decoration:none; }
-    .small-headline a:hover { text-decoration:underline; }
-
-    /* Video and ad */
-    .video-container { position:relative; width:100%; padding-bottom:56.25%; height:0; margin-bottom:20px; }
-    .video-container iframe { position:absolute; top:0; left:0; width:100%; height:100%; }
-    .ad-placeholder { width:100%; max-width:300px; height:600px; background:#f0f0f0; display:flex; align-items:center; justify-content:center; color:#888; font-weight:bold; margin:20px auto 0 auto; }
-
-    footer { text-align:center; padding:20px; font-size:14px; border-top:1px solid #ccc; margin-top:40px; }
-
-    @media (max-width:768px){
-        #container { flex-direction:column; }
-        #sidebar { border-left:none; border-top:2px solid #ccc; margin-top:20px; }
-        .ad-placeholder { height:250px; }
-        .video-container { padding-bottom:56.25%; }
-        .breaking-news { font-size:24px; }
-        .small-headline { font-size:16px; }
-        #news-column a { font-size:14px; }
-        #ticker-container { height:25px; }
-        .ticker-line { font-size:14px; }
-    }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WWE Pro Wrestling Fan Site</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<header>US POLITICAL NEWS</header>
+    <header>
+        <h1>WWE Pro Wrestling Fan Site</h1>
+        <nav>
+            <a href="#live">Live</a>
+            <a href="#news">News</a>
+            <a href="#social">Social</a>
+        </nav>
+    </header>
 
-<!-- Multiple ticker lines -->
-<div id="ticker-container"></div>
+    <main>
+        <!-- Live YouTube Stream -->
+        <section id="live">
+            <h2>Live WWE Stream</h2>
+            <div class="youtube-container">
+                <iframe width="560" height="315" 
+                    src="https://www.youtube.com/embed/live_stream?channel=UCJ5v_MCY6GNUBTO8-D3XoAg" 
+                    frameborder="0" allowfullscreen>
+                </iframe>
+            </div>
+            <div class="live-chat">
+                <h3>Live Chat</h3>
+                <iframe src="https://www.youtube.com/live_chat?v=YOUR_VIDEO_ID&embed_domain=YOUR_DOMAIN" 
+                    width="100%" height="400" frameborder="0"></iframe>
+            </div>
+        </section>
 
-<div id="container">
-    <!-- Left news column -->
-    <div id="news-column"></div>
+        <!-- RSS News Feed -->
+        <section id="news">
+            <h2>WWE News</h2>
+            <div id="rss-feeds">
+                <p>Loading news...</p>
+            </div>
+        </section>
 
-    <!-- Sidebar -->
-    <div id="sidebar">
-        <!-- YouTube video at top -->
-        <div class="video-container">
-            <iframe src="https://www.youtube.com/embed/4nMfRpesYfw?autoplay=1&mute=1&rel=0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-        </div>
+        <!-- Social Media -->
+        <section id="social">
+            <h2>WWE Social Media</h2>
 
-        <!-- Rotating Top Headline -->
-        <div class="breaking-news" id="top-headline">Loading...</div>
+            <!-- Twitter -->
+            <div class="twitter">
+                <a class="twitter-timeline" 
+                   href="https://twitter.com/WWE?ref_src=twsrc%5Etfw">Tweets by WWE</a>
+            </div>
 
-        <!-- Middle headlines -->
-        <div id="middle-headlines"></div>
+            <!-- Instagram -->
+            <div class="instagram">
+                <iframe src="https://www.instagram.com/p/CODE/embed" 
+                        width="320" height="440" frameborder="0" scrolling="no" allowtransparency="true"></iframe>
+            </div>
+        </section>
 
-        <!-- Google Ad Placeholder -->
-        <div class="ad-placeholder">Google Ad Placeholder</div>
-    </div>
-</div>
+        <!-- Google Ads Placeholder -->
+        <section id="ads">
+            <h2>Sponsored</h2>
+            <div class="ad-placeholder">
+                <p>Google Ad Placeholder</p>
+            </div>
+        </section>
+    </main>
 
-<footer>&copy; 2025 US Political News - Drudge Clone</footer>
+    <footer>
+        <p>&copy; 2025 WWE Fan Site</p>
+    </footer>
 
-<script>
-// ======= CONFIG =======
-const feeds = [
-    "https://www.politico.com/rss/politics08.xml",
-    "https://www.npr.org/rss/rss.php?id=1014"
-];
-const apiKey = "xcn09x78nwk54vrwgurlnhjaf53zglo0yiuhpefb"; // Your RSS2JSON API key
-const headlineColors = ["red","black","blue"];
-let rotatingHeadlines = [];
-let currentHeadlineIndex = 0;
-
-// ======= FETCH FEEDS =======
-async function fetchFeed(url){
-    try {
-        const response = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(url)}&api_key=${apiKey}`);
-        const data = await response.json();
-        return data.items;
-    } catch(err){
-        console.error("RSS fetch error:", err);
-        return [];
-    }
-}
-
-// ======= UPDATE HEADLINES =======
-async function updateHeadlines(){
-    let allItems = [];
-    for(const feed of feeds){
-        const items = await fetchFeed(feed);
-        allItems = allItems.concat(items);
-    }
-    if(allItems.length===0) return;
-
-    const previousTop = rotatingHeadlines[currentHeadlineIndex] || "";
-    rotatingHeadlines = allItems.map(item => item.title.toUpperCase());
-
-    // Top headline flash effect if changed
-    const top = document.getElementById("top-headline");
-    if(rotatingHeadlines[0] !== previousTop){
-        top.style.backgroundColor = "yellow"; // flash highlight
-        setTimeout(()=>{ top.style.backgroundColor = "transparent"; }, 1000);
-    }
-    top.textContent = rotatingHeadlines[0];
-    top.style.color = headlineColors[0];
-
-    // Middle headlines
-    const middleContainer = document.getElementById("middle-headlines");
-    middleContainer.innerHTML = "";
-    allItems.slice(1,5).forEach(item=>{
-        const div = document.createElement("div");
-        div.className="small-headline";
-        div.innerHTML=`<a href="${item.link}" target="_blank">${item.title.toUpperCase()}</a>`;
-        middleContainer.appendChild(div);
-    });
-
-    // Left news column
-    const leftNews = document.getElementById("news-column");
-    leftNews.innerHTML="";
-    allItems.slice(0,12).forEach(item=>{
-        const a=document.createElement("a");
-        a.href=item.link; a.target="_blank"; a.textContent=item.title.toUpperCase();
-        leftNews.appendChild(a);
-    });
-
-    // Ticker
-    setupTicker(allItems.slice(0,15));
-}
-
-// ======= TICKER ANIMATION =======
-function setupTicker(items){
-    const tickerContainer = document.getElementById("ticker-container");
-    tickerContainer.innerHTML="";
-    items.forEach((item,index)=>{
-        const line=document.createElement("div");
-        line.className="ticker-line";
-        line.style.top = `${index*30}px`;
-        line.style.color = headlineColors[index%headlineColors.length];
-        line.innerHTML=`<span>${item.title.toUpperCase()}</span>`;
-        tickerContainer.appendChild(line);
-        animateTickerLine(line);
-    });
-}
-
-function animateTickerLine(line){
-    let pos = line.parentElement.offsetWidth;
-    function step(){
-        pos -= 1;
-        if(pos < -line.offsetWidth) pos = line.parentElement.offsetWidth;
-        line.style.left = pos+'px';
-        requestAnimationFrame(step);
-    }
-    step();
-}
-
-// ======= ROTATE TOP HEADLINE =======
-function rotateTopHeadline(){
-    if(rotatingHeadlines.length===0) return;
-    const top = document.getElementById("top-headline");
-    top.textContent = rotatingHeadlines[currentHeadlineIndex];
-    top.style.color = headlineColors[currentHeadlineIndex % headlineColors.length];
-    currentHeadlineIndex = (currentHeadlineIndex + 1) % rotatingHeadlines.length;
-}
-
-// ======= INITIAL LOAD =======
-updateHeadlines().then(()=>{
-    rotateTopHeadline();
-    setInterval(rotateTopHeadline,5000); // rotate every 5 seconds
-});
-
-// Refresh headlines every 10 minutes
-setInterval(updateHeadlines,10*60*1000);
-</script>
+    <!-- Scripts -->
+    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    <script src="script.js"></script>
 </body>
 </html>
