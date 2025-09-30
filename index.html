@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>US Political News - DG</title>
+<title>US Political News - Drudge Clone</title>
 <style>
     body { font-family: Arial, sans-serif; background:#fff; color:#000; margin:0; padding:0; }
     header { text-align:center; padding:20px; font-size:36px; font-weight:bold; }
@@ -78,35 +78,40 @@
 <footer>&copy; 2025 US Political News - Drudge Clone</footer>
 
 <script>
+// ======= CONFIG =======
 const feeds = [
     "https://www.politico.com/rss/politics08.xml",
     "https://www.npr.org/rss/rss.php?id=1014"
 ];
+const apiKey = "xcn09x78nwk54vrwgurlnhjaf53zglo0yiuhpefb"; // Replace with your rss2json.com API key
 const headlineColors = ["red","black","blue"];
 let rotatingHeadlines = [];
 let currentHeadlineIndex = 0;
 
-// Fetch RSS feed as JSON
+// ======= FETCH FEEDS =======
 async function fetchFeed(url){
-    const response = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(url)}`);
-    const data = await response.json();
-    return data.items;
+    try {
+        const response = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(url)}&api_key=${apiKey}`);
+        const data = await response.json();
+        return data.items;
+    } catch(err){
+        console.error("RSS fetch error:", err);
+        return [];
+    }
 }
 
+// ======= UPDATE HEADLINES =======
 async function updateHeadlines(){
     let allItems = [];
     for(const feed of feeds){
-        try{
-            const items = await fetchFeed(feed);
-            allItems = allItems.concat(items);
-        }catch(err){
-            console.error("Error fetching feed:", err);
-        }
+        const items = await fetchFeed(feed);
+        allItems = allItems.concat(items);
     }
-    if(allItems.length === 0) return;
+    if(allItems.length===0) return;
+
     rotatingHeadlines = allItems.map(item => item.title.toUpperCase());
 
-    // Top headline (rotating color)
+    // Top headline
     const top = document.getElementById("top-headline");
     top.textContent = rotatingHeadlines[0];
     top.style.color = headlineColors[0];
@@ -134,7 +139,7 @@ async function updateHeadlines(){
     setupTicker(allItems.slice(0,15));
 }
 
-// Ticker animation
+// ======= TICKER ANIMATION =======
 function setupTicker(items){
     const tickerContainer = document.getElementById("ticker-container");
     tickerContainer.innerHTML="";
@@ -150,29 +155,29 @@ function setupTicker(items){
 }
 
 function animateTickerLine(line){
-    let pos = line.offsetLeft;
+    let pos = line.parentElement.offsetWidth;
     function step(){
-        pos-=1;
+        pos -= 1;
         if(pos < -line.offsetWidth) pos = line.parentElement.offsetWidth;
-        line.style.left=pos+'px';
+        line.style.left = pos+'px';
         requestAnimationFrame(step);
     }
     step();
 }
 
-// Rotate top headline every 5 seconds
+// ======= ROTATE TOP HEADLINE =======
 function rotateTopHeadline(){
     if(rotatingHeadlines.length===0) return;
     const top = document.getElementById("top-headline");
     top.textContent = rotatingHeadlines[currentHeadlineIndex];
     top.style.color = headlineColors[currentHeadlineIndex % headlineColors.length];
-    currentHeadlineIndex = (currentHeadlineIndex+1)%rotatingHeadlines.length;
+    currentHeadlineIndex = (currentHeadlineIndex + 1) % rotatingHeadlines.length;
 }
 
-// Initial load
+// ======= INITIAL LOAD =======
 updateHeadlines().then(()=>{
     rotateTopHeadline();
-    setInterval(rotateTopHeadline,5000);
+    setInterval(rotateTopHeadline,5000); // rotate every 5 seconds
 });
 
 // Refresh headlines every 10 minutes
