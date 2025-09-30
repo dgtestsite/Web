@@ -1,151 +1,121 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NHL Trade Simulator</title>
-<style>
-  body { font-family: Arial, sans-serif; margin: 20px; }
-  h1 { text-align: center; }
-  .teams { display: flex; justify-content: space-around; margin-bottom: 20px; }
-  table { border-collapse: collapse; width: 45%; }
-  th, td { border: 1px solid #ccc; padding: 5px; text-align: left; }
-  th { background: #eee; }
-  #tradeMessage { font-weight: bold; color: red; text-align: center; margin-top: 10px; }
-  .container { display: flex; justify-content: space-between; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>US Political News - Drudge Clone</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ffffff;
+            color: #000;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            text-align: center;
+            padding: 20px;
+            font-size: 36px;
+            font-weight: bold;
+        }
+
+        #container {
+            display: flex;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        #news-column {
+            flex: 3;
+            padding: 20px;
+        }
+
+        #news-column a {
+            display: block;
+            font-size: 18px;
+            color: #000;
+            text-decoration: none;
+            margin: 10px 0;
+        }
+
+        #news-column a:hover {
+            text-decoration: underline;
+        }
+
+        #ads-column {
+            flex: 1;
+            padding: 20px;
+            text-align: center;
+            border-left: 2px solid #ccc;
+        }
+
+        .ad-placeholder {
+            width: 300px;
+            height: 600px;
+            background-color: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #888;
+            font-weight: bold;
+            margin: 0 auto;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 14px;
+            border-top: 1px solid #ccc;
+            margin-top: 40px;
+        }
+
+        @media (max-width: 768px) {
+            #container {
+                flex-direction: column;
+            }
+
+            #ads-column {
+                border-left: none;
+                border-top: 2px solid #ccc;
+                margin-top: 20px;
+            }
+
+            .ad-placeholder {
+                width: 100%;
+                height: 250px;
+            }
+        }
+    </style>
 </head>
 <body>
+    <header>US POLITICAL NEWS</header>
 
-<h1>NHL Trade Simulator 2025–26</h1>
+    <div id="container">
+        <div id="news-column">
+            <a href="#">BREAKING: Major Political Event Today</a>
+            <a href="#">Senate Passes Controversial Bill</a>
+            <a href="#">President Addresses the Nation</a>
+            <a href="#">Election Polls Show Surprising Results</a>
+            <a href="#">Supreme Court Ruling Sparks Debate</a>
+            <a href="#">Governor Announces New Policy</a>
+            <a href="#">Political Analyst Weighs In</a>
+            <a href="#">Campaign Finance Report Released</a>
+            <a href="#">Congressional Hearing Highlights</a>
+            <a href="#">Protests Erupt Across the Country</a>
+            <a href="#">Major Media Outlet Investigates Story</a>
+            <a href="#">Exclusive Interview with Politician</a>
+        </div>
 
-<div class="teams">
-  <div>
-    <label for="team1">Team 1:</label>
-    <select id="team1"></select>
-    <p>Salary Cap: $<span id="cap1">0</span></p>
-  </div>
-  <div>
-    <label for="team2">Team 2:</label>
-    <select id="team2"></select>
-    <p>Salary Cap: $<span id="cap2">0</span></p>
-  </div>
-</div>
+        <div id="ads-column">
+            <div class="ad-placeholder">
+                Google Ad Placeholder
+            </div>
+        </div>
+    </div>
 
-<div class="container">
-  <table id="roster1">
-    <thead><tr><th>Trade?</th><th>Name</th><th>Pos</th><th>Salary</th></tr></thead>
-    <tbody></tbody>
-  </table>
-
-  <table id="roster2">
-    <thead><tr><th>Trade?</th><th>Name</th><th>Pos</th><th>Salary</th></tr></thead>
-    <tbody></tbody>
-  </table>
-</div>
-
-<button onclick="proposeTrade()">Propose Trade</button>
-<p id="tradeMessage"></p>
-
-<script>
-// Example NHL teams & salaries (expand as needed)
-const salaryCapLimit = 95500000;
-const teams = {
-  "Toronto Maple Leafs": [
-    {name: "Auston Matthews", pos: "C", salary: 15200000},
-    {name: "Mitch Marner", pos: "RW", salary: 15000000},
-    {name: "John Tavares", pos: "C", salary: 11750000}
-  ],
-  "Montreal Canadiens": [
-    {name: "Nick Suzuki", pos: "C", salary: 7750000},
-    {name: "Cole Caufield", pos: "RW", salary: 5000000},
-    {name: "Shea Weber", pos: "D", salary: 8000000}
-  ],
-  "Edmonton Oilers": [
-    {name: "Leon Draisaitl", pos: "C", salary: 16500000},
-    {name: "Connor McDavid", pos: "C", salary: 16000000}
-  ],
-  "Colorado Avalanche": [
-    {name: "Nathan MacKinnon", pos: "C", salary: 16050000},
-    {name: "Cale Makar", pos: "D", salary: 9500000}
-  ]
-};
-
-function populateTeams() {
-  const team1 = document.getElementById('team1');
-  const team2 = document.getElementById('team2');
-  Object.keys(teams).forEach(t => {
-    team1.add(new Option(t, t));
-    team2.add(new Option(t, t));
-  });
-  updateRosters();
-}
-
-function updateRosters() {
-  const t1 = document.getElementById('team1').value;
-  const t2 = document.getElementById('team2').value;
-
-  function fillRoster(tableId, roster) {
-    const tbody = document.getElementById(tableId).querySelector('tbody');
-    tbody.innerHTML = '';
-    roster.forEach((player, index) => {
-      const row = document.createElement('tr');
-      row.innerHTML = `
-        <td><input type="checkbox" data-index="${index}"></td>
-        <td>${player.name}</td>
-        <td>${player.pos}</td>
-        <td>${player.salary.toLocaleString()}</td>
-      `;
-      tbody.appendChild(row);
-    });
-  }
-
-  fillRoster('roster1', teams[t1]);
-  fillRoster('roster2', teams[t2]);
-
-  // Update salary caps
-  document.getElementById('cap1').innerText = teams[t1].reduce((sum,p)=>sum+p.salary,0).toLocaleString();
-  document.getElementById('cap2').innerText = teams[t2].reduce((sum,p)=>sum+p.salary,0).toLocaleString();
-}
-
-function proposeTrade() {
-  const t1 = document.getElementById('team1').value;
-  const t2 = document.getElementById('team2').value;
-
-  const tbody1 = document.getElementById('roster1').querySelector('tbody');
-  const tbody2 = document.getElementById('roster2').querySelector('tbody');
-
-  const selected1 = Array.from(tbody1.querySelectorAll('input[type="checkbox"]:checked')).map(cb => parseInt(cb.dataset.index));
-  const selected2 = Array.from(tbody2.querySelectorAll('input[type="checkbox"]:checked')).map(cb => parseInt(cb.dataset.index));
-
-  if(selected1.length === 0 && selected2.length === 0) {
-    document.getElementById('tradeMessage').innerText = "Select players to trade!";
-    return;
-  }
-
-  const tradeSalary1 = selected1.reduce((sum, idx) => sum + teams[t1][idx].salary, 0);
-  const tradeSalary2 = selected2.reduce((sum, idx) => sum + teams[t2][idx].salary, 0);
-
-  const team1Current = teams[t1].reduce((sum,p)=>sum+p.salary,0);
-  const team2Current = teams[t2].reduce((sum,p)=>sum+p.salary,0);
-
-  if(team1Current - tradeSalary1 + tradeSalary2 > salaryCapLimit || team2Current - tradeSalary2 + tradeSalary1 > salaryCapLimit) {
-    document.getElementById('tradeMessage').innerText = "Trade violates salary cap!";
-    return;
-  }
-
-  // Execute trade
-  selected1.sort((a,b)=>b-a).forEach(idx => teams[t2].push(teams[t1].splice(idx,1)[0]));
-  selected2.sort((a,b)=>b-a).forEach(idx => teams[t1].push(teams[t2].splice(idx,1)[0]));
-
-  document.getElementById('tradeMessage').innerText = "Trade executed!";
-  updateRosters();
-}
-
-document.getElementById('team1').addEventListener('change', updateRosters);
-document.getElementById('team2').addEventListener('change', updateRosters);
-populateTeams();
-</script>
-
+    <footer>
+        &copy; 2025 US Political News - Drudge Clone
+    </footer>
 </body>
 </html>
