@@ -1,36 +1,283 @@
+<!--
+nhl-fantasy-ratings.html
+Simple, zero-dependency static HTML template for an NHL fantasy player ratings site.
+Drop this file into a GitHub repo as `index.html` and enable GitHub Pages (use main branch / root) to host for free.
+
+Features:
+- Sample teams + players data (editable in the `sampleTeams` JS variable)
+- Ratings out of 100 (simple, visible algorithm with comments so you can tweak)
+- Team filter, search, sorting by column, regenerate/randomize ratings
+- Upload JSON data to replace sample data (structure shown below)
+
+Sample JSON structure for upload:
+{
+  "teams": [
+    {"name":"Toronto Maple Leafs","abbr":"TOR","players":[{"name":"A. Player","position":"C","goals":20,"assists":30,"hits":50}]},
+    ...
+  ]
+}
+
+Deployment to GitHub Pages:
+1. Create a new GitHub repository (public is fine for Pages).
+2. Commit this file as `index.html` in the repository root.
+3. In repository Settings > Pages, set source to `main` branch and root (or follow the prompt on the new UI).
+4. Visit https://<your-username>.github.io/<repo-name>/ after it builds.
+
+Customize: edit the `sampleTeams` variable below or upload JSON using the "Upload JSON" control.
+-->
+
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>NHL Player Ratings by Team</title>
-  <link rel="stylesheet" href="styles.css" />
+  <title>NHL Fantasy Player Ratings</title>
+  <style>
+    :root{--accent:#0b5fff;--muted:#6b7280;--card:#ffffff;--bg:#f8fafc}
+    html,body{height:100%;margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial}
+    body{background:var(--bg);color:#0f172a;padding:24px}
+    .container{max-width:1100px;margin:0 auto}
+    header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+    h1{font-size:20px;margin:0}
+    .controls{display:flex;gap:8px;align-items:center}
+    select,input[type=text],button{padding:8px 10px;border-radius:8px;border:1px solid #e6e9ee;background:white}
+    button{cursor:pointer}
+    .card{background:var(--card);border-radius:12px;padding:14px;box-shadow:0 6px 18px rgba(13,20,40,0.06)}
+    table{width:100%;border-collapse:collapse;margin-top:12px}
+    th,td{padding:8px 10px;text-align:left;border-bottom:1px solid #eef2f7}
+    th{background:#fafcff;cursor:pointer;user-select:none}
+    .rating{font-weight:700}
+    .muted{color:var(--muted)}
+    .small{font-size:13px}
+    .toolbar{display:flex;gap:8px;flex-wrap:wrap}
+    .uploader{display:inline-block}
+    footer{margin-top:18px;color:var(--muted);font-size:13px}
+    @media (max-width:700px){.controls{flex-direction:column;align-items:stretch}}
+  </style>
 </head>
 <body>
-  <header>
-    <h1>NHL Player Ratings</h1>
-    <p class="subtitle">Lists current NHL rosters by team and computes a 0–100 rating for each player.</p>
-  </header>
+  <div class="container">
+    <header>
+      <div>
+        <h1>NHL Fantasy Player Ratings</h1>
+        <div class="small muted">Simple static template — ratings out of 100. Edit data or upload JSON.</div>
+      </div>
 
-  <main>
-    <section class="controls">
-      <label for="teamSelect">Choose team:</label>
-      <select id="teamSelect"><option value="all">Loading teams…</option></select>
+      <div class="controls">
+        <div class="toolbar card" style="display:flex;gap:8px;align-items:center">
+          <label for="teamSelect" class="small muted">Team</label>
+          <select id="teamSelect"><option value="all">All Teams</option></select>
 
-      <label for="rankingSource">Optional fantasy ranking JSON URL:</label>
-      <input id="rankingSource" placeholder="https://example.com/rankings.json" />
+          <label for="search" class="small muted">Search</label>
+          <input id="search" type="text" placeholder="Search player or position" />
 
-      <button id="applyBtn">Load Roster & Compute Ratings</button>
-      <span id="status" class="status">Ready</span>
-    </section>
+          <button id="regen">Regenerate Ratings</button>
+          <label class="uploader small">
+            <input id="jsonUpload" type="file" accept="application/json" style="display:none" />
+            <button id="uploadBtn">Upload JSON</button>
+          </label>
 
-    <section id="teamsContainer" class="teams"></section>
-  </main>
+        </div>
+      </div>
+    </header>
 
-  <footer>
-    <p>Static demo site. Ratings are computed client-side using NHL stats and optional external fantasy ranking JSON (if provided).</p>
-  </footer>
+    <main>
+      <div class="card">
+        <div class="small muted">Showing <span id="count">0</span> players — click a column header to sort.</div>
+        <table id="playersTable" aria-describedby="count">
+          <thead>
+            <tr>
+              <th data-key="team">Team</th>
+              <th data-key="name">Player</th>
+              <th data-key="position">Pos</th>
+              <th data-key="goals">G</th>
+              <th data-key="assists">A</th>
+              <th data-key="hits">HIT</th>
+              <th data-key="rating">Rating</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
 
-  <script src="script.js"></script>
+      <footer>
+        <div class="muted">Tip: Edit the sample data in the source or upload your own JSON. Ratings are calculated client-side and not stored.</div>
+      </footer>
+    </main>
+  </div>
+
+  <script>
+    // --------------------- SAMPLE DATA ---------------------
+    // You can replace this with your own JSON (see top comment for structure)
+    const sampleTeams = [
+      {
+        name: 'Toronto Maple Leafs', abbr: 'TOR', players: [
+          {name:'Auston Matthews', position:'C', goals:50, assists:30, hits:30},
+          {name:'William Nylander', position:'RW', goals:25, assists:45, hits:22},
+          {name:'Morgan Rielly', position:'D', goals:10, assists:35, hits:120}
+        ]
+      },
+      {
+        name: 'Boston Bruins', abbr: 'BOS', players: [
+          {name:'David Pastrnak', position:'RW', goals:40, assists:30, hits:20},
+          {name:'Brad Marchand', position:'LW', goals:20, assists:50, hits:90},
+          {name:'Charlie McAvoy', position:'D', goals:8, assists:28, hits:150}
+        ]
+      },
+      {
+        name: 'Tampa Bay Lightning', abbr:'TBL', players:[
+          {name:'Steven Stamkos', position:'C', goals:35, assists:40, hits:50},
+          {name:'Nikita Kucherov', position:'RW', goals:30, assists:60, hits:18},
+          {name:'Victor Hedman', position:'D', goals:12, assists:45, hits:110}
+        ]
+      }
+    ];
+    // --------------------- END SAMPLE DATA ------------------
+
+    // DOM refs
+    const teamSelect = document.getElementById('teamSelect');
+    const searchInput = document.getElementById('search');
+    const playersTableBody = document.querySelector('#playersTable tbody');
+    const regenBtn = document.getElementById('regen');
+    const countEl = document.getElementById('count');
+    const jsonUpload = document.getElementById('jsonUpload');
+    const uploadBtn = document.getElementById('uploadBtn');
+
+    // App state
+    let teams = JSON.parse(JSON.stringify(sampleTeams)); // deep copy
+    let flatPlayers = [];
+    let sortKey = null; let sortDir = 1; // 1 asc, -1 desc
+
+    // Simple rating algorithm (customize as needed)
+    // We map goals, assists, hits into a 0-100 rating using weights.
+    function computeRating(p){
+      // normalize - simple heuristic that handles typical NHL ranges
+      // goals up to ~60, assists up to ~80, hits up to ~300
+      const g = Math.min(p.goals || 0, 60) / 60; // 0..1
+      const a = Math.min(p.assists || 0, 80) / 80;
+      const h = Math.min(p.hits || 0, 200) / 200;
+
+      // weights: goals (40%), assists (40%), hits (20%), with a tiny randomness to break ties
+      const base = (g * 0.4 + a * 0.4 + h * 0.2) * 100;
+      const noise = (Math.random() - 0.4) * 3; // small deterministic randomness per generation
+      const rating = Math.max(0, Math.min(100, Math.round(base + noise)));
+      return rating;
+    }
+
+    // Build flat players array with team name
+    function rebuildFlat(){
+      flatPlayers = [];
+      teams.forEach(team => {
+        (team.players || []).forEach(p => {
+          const player = Object.assign({}, p);
+          player.team = team.name;
+          player.teamAbbr = team.abbr || '';
+          player.rating = computeRating(player);
+          flatPlayers.push(player);
+        });
+      });
+    }
+
+    // Populate team selector
+    function populateTeams(){
+      // clear except "All"
+      while(teamSelect.options.length>1) teamSelect.remove(1);
+      teams.forEach((t,i)=>{
+        const opt = document.createElement('option'); opt.value = i; opt.textContent = t.name; teamSelect.appendChild(opt);
+      });
+    }
+
+    // Render players into table
+    function render(){
+      const q = searchInput.value.trim().toLowerCase();
+      const teamFilter = teamSelect.value;
+      let shown = flatPlayers.filter(p=>{
+        if(teamFilter !== 'all'){
+          const t = teams[teamFilter]; if(!t) return false; if(p.team !== t.name) return false;
+        }
+        if(!q) return true;
+        return (p.name||'').toLowerCase().includes(q) || (p.position||'').toLowerCase().includes(q) || (p.team||'').toLowerCase().includes(q);
+      });
+
+      // sort
+      if(sortKey){
+        shown.sort((a,b)=>{
+          const av = a[sortKey] ?? '';
+          const bv = b[sortKey] ?? '';
+          if(typeof av === 'number' && typeof bv === 'number') return (av-bv) * sortDir * -1; // numeric desc default
+          return String(av).localeCompare(String(bv)) * sortDir;
+        });
+      }
+
+      // render rows
+      playersTableBody.innerHTML = '';
+      shown.forEach(p=>{
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${escapeHtml(p.team)}</td>
+                        <td>${escapeHtml(p.name)}</td>
+                        <td>${escapeHtml(p.position || '')}</td>
+                        <td>${numberOrDash(p.goals)}</td>
+                        <td>${numberOrDash(p.assists)}</td>
+                        <td>${numberOrDash(p.hits)}</td>
+                        <td class="rating">${p.rating}</td>`;
+        playersTableBody.appendChild(tr);
+      });
+      countEl.textContent = shown.length;
+    }
+
+    function numberOrDash(v){ return (v===undefined||v===null||v==='') ? '—' : String(v); }
+
+    // HTML escape helper
+    function escapeHtml(s){ return String(s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]); }
+
+    // Event bindings
+    document.querySelectorAll('th[data-key]').forEach(th=>{
+      th.addEventListener('click', ()=>{
+        const key = th.dataset.key;
+        if(sortKey === key) sortDir *= -1; else { sortKey = key; sortDir = 1; }
+        render();
+      });
+    });
+
+    // regenerate ratings
+    regenBtn.addEventListener('click', ()=>{ rebuildFlat(); render(); });
+
+    // search + team change
+    searchInput.addEventListener('input', ()=> render());
+    teamSelect.addEventListener('change', ()=> render());
+
+    // upload JSON
+    uploadBtn.addEventListener('click', ()=> jsonUpload.click());
+    jsonUpload.addEventListener('change', (e)=>{
+      const f = e.target.files[0]; if(!f) return;
+      const reader = new FileReader();
+      reader.onload = ev => {
+        try{
+          const data = JSON.parse(ev.target.result);
+          if(Array.isArray(data.teams)){
+            teams = data.teams; // replace
+            init();
+            alert('JSON loaded: ' + teams.length + ' teams');
+          } else if(Array.isArray(data)){
+            // accept raw array of teams
+            teams = data; init(); alert('JSON loaded (array)');
+          } else {
+            alert('JSON not in expected format. See top-comment for sample structure.');
+          }
+        }catch(err){ alert('Invalid JSON: ' + err.message); }
+      };
+      reader.readAsText(f);
+    });
+
+    // initial setup
+    function init(){
+      populateTeams();
+      rebuildFlat();
+      render();
+    }
+
+    // init on load
+    init();
+  </script>
 </body>
 </html>
