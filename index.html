@@ -26,6 +26,7 @@
             margin: 0 auto;
         }
 
+        /* Left news column */
         #news-column {
             flex: 3;
             padding: 20px;
@@ -43,20 +44,42 @@
             text-decoration: underline;
         }
 
-        #ads-column {
+        /* Sidebar */
+        #sidebar {
             flex: 1;
             padding: 20px;
-            text-align: center;
             border-left: 2px solid #ccc;
         }
 
-        /* Make the YouTube video larger */
+        /* Drudge-style headlines */
+        .breaking-news {
+            font-size: 22px;
+            font-weight: bold;
+            color: #000;
+            margin-bottom: 15px;
+        }
+
+        .small-headline {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .small-headline a {
+            color: #000;
+            text-decoration: none;
+        }
+
+        .small-headline a:hover {
+            text-decoration: underline;
+        }
+
+        /* Video container */
         .video-container {
             position: relative;
             width: 100%;
             padding-bottom: 56.25%; /* 16:9 aspect ratio */
             height: 0;
-            margin-bottom: 20px;
+            margin: 20px 0;
         }
 
         .video-container iframe {
@@ -67,6 +90,7 @@
             height: 100%;
         }
 
+        /* Google Ad placeholder */
         .ad-placeholder {
             width: 100%;
             max-width: 300px;
@@ -93,19 +117,18 @@
                 flex-direction: column;
             }
 
-            #ads-column {
+            #sidebar {
                 border-left: none;
                 border-top: 2px solid #ccc;
                 margin-top: 20px;
             }
 
             .ad-placeholder {
-                width: 100%;
                 height: 250px;
             }
 
             .video-container {
-                padding-bottom: 56.25%; /* keep aspect ratio */
+                padding-bottom: 56.25%;
             }
         }
     </style>
@@ -114,6 +137,7 @@
     <header>US POLITICAL NEWS</header>
 
     <div id="container">
+        <!-- Left news column -->
         <div id="news-column">
             <a href="#">BREAKING: Major Political Event Today</a>
             <a href="#">Senate Passes Controversial Bill</a>
@@ -129,8 +153,20 @@
             <a href="#">Exclusive Interview with Politician</a>
         </div>
 
-        <div id="ads-column">
-            <!-- Larger YouTube Video Embed -->
+        <!-- Right sidebar -->
+        <div id="sidebar">
+            <!-- Big Breaking News Headline -->
+            <div class="breaking-news">
+                BREAKING: Major Political Event Today!
+            </div>
+
+            <!-- Smaller headlines -->
+            <div class="small-headline"><a href="#">Senate Passes Controversial Bill</a></div>
+            <div class="small-headline"><a href="#">President Addresses the Nation</a></div>
+            <div class="small-headline"><a href="#">Election Polls Show Surprising Results</a></div>
+            <div class="small-headline"><a href="#">Supreme Court Ruling Sparks Debate</a></div>
+
+            <!-- YouTube video -->
             <div class="video-container">
                 <iframe 
                     src="https://www.youtube.com/embed/4nMfRpesYfw" 
