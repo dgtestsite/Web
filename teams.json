@@ -1,0 +1,29 @@
+[
+  {
+    "teamId": 1,
+    "name": "Toronto Maple Leafs",
+    "capSpace": 9000000,
+    "roster": [
+      {
+        "playerId": 101,
+        "name": "Auston Matthews",
+        "position": "C",
+        "age": 26,
+        "contract": {
+          "length": 6,
+          "capHit": 11800000
+        }
+      },
+      {
+        "playerId": 102,
+        "name": "Mitch Marner",
+        "position": "RW",
+        "age": 25,
+        "contract": {
+          "length": 6,
+          "capHit": 10750000
+        }
+      }
+    ]
+  }
+]
